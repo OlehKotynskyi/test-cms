@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: твій-username/твій-репозиторій # Заміни на свій GitHub репозиторій
+  repo: OlehKotynskyi/test-cms # Заміни на свій GitHub репозиторій
   branch: main # Гілка, з якою працюватиме CMS
 
 media_folder: "img" # Папка для завантаження медіафайлів

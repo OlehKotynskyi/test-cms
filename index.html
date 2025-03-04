@@ -39,7 +39,7 @@
 							<div class="body-creative__buttons">
 								<button type="button" data-popup="#popup"
 									class="body-creative__button button button_color-indigo">Hire me</button>
-								<a href="#" class="body-creative__linck button">Read more </a>
+								<a href="#" class="body-creative__linck button">Read more</a>
 							</div>
 						</div>
 						<div class="body-creative__opis" id="creative-description"></div>
@@ -191,24 +191,39 @@
 	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 	<script>
 		fetch('/home.md')
-			.then(response => response.text())
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! Status: ${response.status}`);
+				}
+				return response.text();
+			})
 			.then(text => {
+				if (!text) {
+					throw new Error('Файл home.md порожній або некоректний');
+				}
 				const parts = text.split('---');
+				if (parts.length < 3) {
+					throw new Error('Некоректний формат home.md');
+				}
 				const yaml = parts[1].trim();
 				const data = {};
 
-				// Парсимо YAML вручну
+				// Парсимо YAML із захистом від помилок
 				const lines = yaml.split('\n');
 				let currentList = null;
 				lines.forEach(line => {
 					if (line.startsWith('  - ')) {
 						const item = {};
 						const [key, value] = line.replace('  - ', '').split(': ');
-						item[key.trim()] = value.trim();
-						currentList.push(item);
+						if (currentList) {
+							item[key.trim()] = value ? value.trim() : '';
+							currentList.push(item);
+						}
 					} else if (line.startsWith(' ')) {
 						const [key, value] = line.trim().split(': ');
-						currentList[currentList.length - 1][key.trim()] = value.trim();
+						if (currentList && currentList.length > 0) {
+							currentList[currentList.length - 1][key.trim()] = value ? value.trim() : '';
+						}
 					} else if (line.includes(': [')) {
 						const [key] = line.split(': ');
 						data[key.trim()] = [];
@@ -221,59 +236,75 @@
 				});
 
 				// Creative
-				document.getElementById('creative-subtitle').textContent = data.creative_subtitle;
-				document.getElementById('creative-title').innerHTML = data.creative_title;
-				document.getElementById('creative-body').innerHTML = marked.parse(data.creative_body);
-				document.getElementById('creative-description').textContent = data.creative_description;
-				document.getElementById('creative-image').innerHTML = `<picture><source srcset="${data.creative_image}" type="image/webp"><img src="${data.creative_image.replace('.webp', '.jpg')}" alt="girl"></picture>`;
+				document.getElementById('creative-subtitle').textContent = data.creative_subtitle || 'Підзаголовок не вказано';
+				document.getElementById('creative-title').innerHTML = data.creative_title || 'Заголовок не вказано';
+				document.getElementById('creative-body').innerHTML = marked.parse(data.creative_body || 'Текст не вказано');
+				document.getElementById('creative-description').textContent = data.creative_description || 'Опис не вказано';
+				document.getElementById('creative-image').innerHTML = data.creative_image
+					? `<picture><source srcset="${data.creative_image}" type="image/webp"><img src="${data.creative_image.replace('.webp', '.jpg')}" alt="girl"></picture>`
+					: 'Зображення не вказано';
 
 				// Industrial
-				document.getElementById('industrial-title').innerHTML = data.industrial_title;
-				document.getElementById('industrial-web-design').innerHTML = marked.parse(data.industrial_web_design);
-				document.getElementById('industrial-branding').innerHTML = marked.parse(data.industrial_branding);
-				document.getElementById('industrial-photography').innerHTML = marked.parse(data.industrial_photography);
-				document.getElementById('industrial-mobile-design').innerHTML = marked.parse(data.industrial_mobile_design);
-				document.getElementById('industrial-3d-modeling').innerHTML = marked.parse(data.industrial_3d_modeling);
-				document.getElementById('industrial-video-creating').innerHTML = marked.parse(data.industrial_video_creating);
-				document.getElementById('industrial-image').innerHTML = `<picture><source srcset="${data.industrial_image}" type="image/webp"><img src="${data.industrial_image.replace('.webp', '.jpg')}" alt="industrial"></picture>`;
+				document.getElementById('industrial-title').innerHTML = data.industrial_title || 'Заголовок не вказано';
+				document.getElementById('industrial-web-design').innerHTML = marked.parse(data.industrial_web_design || 'Текст не вказано');
+				document.getElementById('industrial-branding').innerHTML = marked.parse(data.industrial_branding || 'Текст не вказано');
+				document.getElementById('industrial-photography').innerHTML = marked.parse(data.industrial_photography || 'Текст не вказано');
+				document.getElementById('industrial-mobile-design').innerHTML = marked.parse(data.industrial_mobile_design || 'Текст не вказано');
+				document.getElementById('industrial-3d-modeling').innerHTML = marked.parse(data.industrial_3d_modeling || 'Текст не вказано');
+				document.getElementById('industrial-video-creating').innerHTML = marked.parse(data.industrial_video_creating || 'Текст не вказано');
+				document.getElementById('industrial-image').innerHTML = data.industrial_image
+					? `<picture><source srcset="${data.industrial_image}" type="image/webp"><img src="${data.industrial_image.replace('.webp', '.jpg')}" alt="industrial"></picture>`
+					: 'Зображення не вказано';
 
 				// Brands
 				const brandsList = document.getElementById('brands-logos');
-				data.brands_logos.forEach(logo => {
-					brandsList.innerHTML += `
-						<li class="list-brands__item">
-							<a href="#" class="list-brands__image">
-								<picture><source srcset="${logo.logo_image}" type="image/webp"><img src="${logo.logo_image.replace('.webp', '.png')}" alt="${logo.logo_name}"></picture>
-							</a>
-						</li>`;
-				});
+				if (data.brands_logos && data.brands_logos.length > 0) {
+					data.brands_logos.forEach(logo => {
+						brandsList.innerHTML += `
+							<li class="list-brands__item">
+								<a href="#" class="list-brands__image">
+									<picture><source srcset="${logo.logo_image}" type="image/webp"><img src="${logo.logo_image.replace('.webp', '.png')}" alt="${logo.logo_name || 'Brand'}"></picture>
+								</a>
+							</li>`;
+					});
+				} else {
+					brandsList.innerHTML = '<li>Логотипи не вказані</li>';
+				}
 
 				// The Best Gallery
 				const gallery = document.getElementById('the-best-gallery');
-				data.the_best_gallery.forEach(item => {
-					gallery.innerHTML += `
-						<div class="galleri__block">
-							<div class="galleri__image-ibg">
-								<picture><source srcset="${item.gallery_image}" type="image/webp"><img src="${item.gallery_image.replace('.webp', '.jpg')}" alt="foto"></picture>
-							</div>
-							<a href="#" class="galleri__linck _icon-arrow-right">
-								<div class="galleri__wrap">
-									<h4 class="galleri__titel">${item.gallery_title}</h4>
-									<div class="galleri__text">${item.gallery_text}</div>
+				if (data.the_best_gallery && data.the_best_gallery.length > 0) {
+					data.the_best_gallery.forEach(item => {
+						gallery.innerHTML += `
+							<div class="galleri__block">
+								<div class="galleri__image-ibg">
+									<picture><source srcset="${item.gallery_image}" type="image/webp"><img src="${item.gallery_image.replace('.webp', '.jpg')}" alt="foto"></picture>
 								</div>
-							</a>
-						</div>`;
-				});
+								<a href="#" class="galleri__linck _icon-arrow-right">
+									<div class="galleri__wrap">
+										<h4 class="galleri__titel">${item.gallery_title || 'Назва не вказана'}</h4>
+										<div class="galleri__text">${item.gallery_text || 'Опис не вказано'}</div>
+									</div>
+								</a>
+							</div>`;
+					});
+				} else {
+					gallery.innerHTML = '<div>Галерея не вказана</div>';
+				}
 
 				// Analytics
-				document.getElementById('analytics-business').innerHTML = marked.parse(data.analytics_business);
-				document.getElementById('analytics-financial').innerHTML = marked.parse(data.analytics_financial);
-				document.getElementById('analytics-market').innerHTML = marked.parse(data.analytics_market);
+				document.getElementById('analytics-business').innerHTML = marked.parse(data.analytics_business || 'Текст не вказано');
+				document.getElementById('analytics-financial').innerHTML = marked.parse(data.analytics_financial || 'Текст не вказано');
+				document.getElementById('analytics-market').innerHTML = marked.parse(data.analytics_market || 'Текст не вказано');
 
 				// Footer
-				document.getElementById('footer-text').innerHTML = marked.parse(data.footer_text);
+				document.getElementById('footer-text').innerHTML = marked.parse(data.footer_text || 'Текст не вказано');
 			})
-			.catch(error => console.error('Помилка завантаження home.md:', error));
+			.catch(error => {
+				console.error('Помилка завантаження home.md:', error);
+				document.getElementById('creative-title').textContent = 'Помилка завантаження контенту';
+				document.getElementById('creative-body').textContent = 'Перевірте наявність home.md і зображень';
+			});
 	</script>
 	<script src="js/app.min.js?_v=20230531171640"></script>
 </body>

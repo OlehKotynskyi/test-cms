@@ -241,7 +241,7 @@
 				document.getElementById('creative-body').innerHTML = marked.parse(data.creative_body || 'Текст не вказано');
 				document.getElementById('creative-description').textContent = data.creative_description || 'Опис не вказано';
 				document.getElementById('creative-image').innerHTML = data.creative_image
-					? `<picture><source srcset="${data.creative_image}" type="image/webp"><img src="${data.creative_image.replace('.webp', '.jpg')}" alt="girl"></picture>`
+					? `<img src="${data.creative_image}" alt="girl">`
 					: 'Зображення не вказано';
 
 				// Industrial
@@ -253,7 +253,7 @@
 				document.getElementById('industrial-3d-modeling').innerHTML = marked.parse(data.industrial_3d_modeling || 'Текст не вказано');
 				document.getElementById('industrial-video-creating').innerHTML = marked.parse(data.industrial_video_creating || 'Текст не вказано');
 				document.getElementById('industrial-image').innerHTML = data.industrial_image
-					? `<picture><source srcset="${data.industrial_image}" type="image/webp"><img src="${data.industrial_image.replace('.webp', '.jpg')}" alt="industrial"></picture>`
+					? `<img src="${data.industrial_image}" alt="industrial">`
 					: 'Зображення не вказано';
 
 				// Brands
@@ -263,7 +263,7 @@
 						brandsList.innerHTML += `
 							<li class="list-brands__item">
 								<a href="#" class="list-brands__image">
-									<picture><source srcset="${logo.logo_image}" type="image/webp"><img src="${logo.logo_image.replace('.webp', '.png')}" alt="${logo.logo_name || 'Brand'}"></picture>
+									<img src="${logo.logo_image}" alt="${logo.logo_name || 'Brand'}">
 								</a>
 							</li>`;
 					});
@@ -278,7 +278,7 @@
 						gallery.innerHTML += `
 							<div class="galleri__block">
 								<div class="galleri__image-ibg">
-									<picture><source srcset="${item.gallery_image}" type="image/webp"><img src="${item.gallery_image.replace('.webp', '.jpg')}" alt="foto"></picture>
+									<img src="${item.gallery_image}" alt="foto">
 								</div>
 								<a href="#" class="galleri__linck _icon-arrow-right">
 									<div class="galleri__wrap">

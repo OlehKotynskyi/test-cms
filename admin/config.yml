@@ -1,5 +1,5 @@
 backend:
-  name: github
+  name: git-gateway
   repo: OlehKotynskyi/test-cms # Заміни на свій GitHub репозиторій
   branch: main # Гілка, з якою працюватиме CMS
 

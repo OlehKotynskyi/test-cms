@@ -190,7 +190,10 @@
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 	<script>
-		fetch('/home.md')
+		// Визначаємо базовий шлях для Netlify (корінь сайту)
+		const basePath = window.location.pathname.startsWith('/index.html') ? '' : '';
+
+		fetch(`${basePath}/home.md`)
 			.then(response => {
 				if (!response.ok) {
 					throw new Error(`HTTP error! Status: ${response.status}`);
@@ -241,7 +244,7 @@
 				document.getElementById('creative-body').innerHTML = marked.parse(data.creative_body || 'Текст не вказано');
 				document.getElementById('creative-description').textContent = data.creative_description || 'Опис не вказано';
 				document.getElementById('creative-image').innerHTML = data.creative_image
-					? `<img src="${data.creative_image}" alt="girl">`
+					? `<img src="${basePath}${data.creative_image}" alt="girl">`
 					: 'Зображення не вказано';
 
 				// Industrial
@@ -253,7 +256,7 @@
 				document.getElementById('industrial-3d-modeling').innerHTML = marked.parse(data.industrial_3d_modeling || 'Текст не вказано');
 				document.getElementById('industrial-video-creating').innerHTML = marked.parse(data.industrial_video_creating || 'Текст не вказано');
 				document.getElementById('industrial-image').innerHTML = data.industrial_image
-					? `<img src="${data.industrial_image}" alt="industrial">`
+					? `<img src="${basePath}${data.industrial_image}" alt="industrial">`
 					: 'Зображення не вказано';
 
 				// Brands
@@ -261,11 +264,11 @@
 				if (data.brands_logos && data.brands_logos.length > 0) {
 					data.brands_logos.forEach(logo => {
 						brandsList.innerHTML += `
-							<li class="list-brands__item">
-								<a href="#" class="list-brands__image">
-									<img src="${logo.logo_image}" alt="${logo.logo_name || 'Brand'}">
-								</a>
-							</li>`;
+                            <li class="list-brands__item">
+                                <a href="#" class="list-brands__image">
+                                    <img src="${basePath}${logo.logo_image}" alt="${logo.logo_name || 'Brand'}">
+                                </a>
+                            </li>`;
 					});
 				} else {
 					brandsList.innerHTML = '<li>Логотипи не вказані</li>';
@@ -276,17 +279,17 @@
 				if (data.the_best_gallery && data.the_best_gallery.length > 0) {
 					data.the_best_gallery.forEach(item => {
 						gallery.innerHTML += `
-							<div class="galleri__block">
-								<div class="galleri__image-ibg">
-									<img src="${item.gallery_image}" alt="foto">
-								</div>
-								<a href="#" class="galleri__linck _icon-arrow-right">
-									<div class="galleri__wrap">
-										<h4 class="galleri__titel">${item.gallery_title || 'Назва не вказана'}</h4>
-										<div class="galleri__text">${item.gallery_text || 'Опис не вказано'}</div>
-									</div>
-								</a>
-							</div>`;
+                            <div class="galleri__block">
+                                <div class="galleri__image-ibg">
+                                    <img src="${basePath}${item.gallery_image}" alt="foto">
+                                </div>
+                                <a href="#" class="galleri__linck _icon-arrow-right">
+                                    <div class="galleri__wrap">
+                                        <h4 class="galleri__titel">${item.gallery_title || 'Назва не вказана'}</h4>
+                                        <div class="galleri__text">${item.gallery_text || 'Опис не вказано'}</div>
+                                    </div>
+                                </a>
+                            </div>`;
 					});
 				} else {
 					gallery.innerHTML = '<div>Галерея не вказана</div>';

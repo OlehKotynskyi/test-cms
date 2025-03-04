@@ -1,7 +1,7 @@
 ---
 creative_subtitle: Jessica Strosin
-creative_title: "Просто щось міняю "
-creative_body: Хочу  інший текст мені треба подивитись чи все редагується
+creative_title: "Все запрацювало і тількі на нетліфай працює "
+creative_body: На гід хабі жива сторінка не працює але на нетліфай все робить і редагується
 creative_description: I am currently open for part-time work.
 creative_image: /img/main/girl-main.jpg
 industrial_title: From beginning ideas to individual integrity, rich identity

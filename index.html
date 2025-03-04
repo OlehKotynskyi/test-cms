@@ -189,11 +189,9 @@
 		</div>
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 	<script>
-		// Визначаємо базовий шлях для Netlify (корінь сайту)
-		const basePath = window.location.pathname.startsWith('/index.html') ? '' : '';
-
-		fetch(`${basePath}/home.md`)
+		fetch('/home.md')
 			.then(response => {
 				if (!response.ok) {
 					throw new Error(`HTTP error! Status: ${response.status}`);
@@ -204,39 +202,15 @@
 				if (!text) {
 					throw new Error('Файл home.md порожній або некоректний');
 				}
+				// Розділяємо YAML і контент
 				const parts = text.split('---');
 				if (parts.length < 3) {
 					throw new Error('Некоректний формат home.md');
 				}
 				const yaml = parts[1].trim();
-				const data = {};
 
-				// Парсимо YAML із захистом від помилок
-				const lines = yaml.split('\n');
-				let currentList = null;
-				lines.forEach(line => {
-					if (line.startsWith('  - ')) {
-						const item = {};
-						const [key, value] = line.replace('  - ', '').split(': ');
-						if (currentList) {
-							item[key.trim()] = value ? value.trim() : '';
-							currentList.push(item);
-						}
-					} else if (line.startsWith(' ')) {
-						const [key, value] = line.trim().split(': ');
-						if (currentList && currentList.length > 0) {
-							currentList[currentList.length - 1][key.trim()] = value ? value.trim() : '';
-						}
-					} else if (line.includes(': [')) {
-						const [key] = line.split(': ');
-						data[key.trim()] = [];
-						currentList = data[key.trim()];
-					} else if (line) {
-						const [key, value] = line.split(': ');
-						data[key.trim()] = value ? value.trim() : '';
-						currentList = null;
-					}
-				});
+				// Використовуємо js-yaml для парсингу
+				const data = jsyaml.load(yaml);
 
 				// Creative
 				document.getElementById('creative-subtitle').textContent = data.creative_subtitle || 'Підзаголовок не вказано';
@@ -244,7 +218,7 @@
 				document.getElementById('creative-body').innerHTML = marked.parse(data.creative_body || 'Текст не вказано');
 				document.getElementById('creative-description').textContent = data.creative_description || 'Опис не вказано';
 				document.getElementById('creative-image').innerHTML = data.creative_image
-					? `<img src="${basePath}${data.creative_image}" alt="girl">`
+					? `<img src="${data.creative_image}" alt="girl">`
 					: 'Зображення не вказано';
 
 				// Industrial
@@ -256,7 +230,7 @@
 				document.getElementById('industrial-3d-modeling').innerHTML = marked.parse(data.industrial_3d_modeling || 'Текст не вказано');
 				document.getElementById('industrial-video-creating').innerHTML = marked.parse(data.industrial_video_creating || 'Текст не вказано');
 				document.getElementById('industrial-image').innerHTML = data.industrial_image
-					? `<img src="${basePath}${data.industrial_image}" alt="industrial">`
+					? `<img src="${data.industrial_image}" alt="industrial">`
 					: 'Зображення не вказано';
 
 				// Brands
@@ -266,7 +240,7 @@
 						brandsList.innerHTML += `
                             <li class="list-brands__item">
                                 <a href="#" class="list-brands__image">
-                                    <img src="${basePath}${logo.logo_image}" alt="${logo.logo_name || 'Brand'}">
+                                    <img src="${logo.logo_image}" alt="${logo.logo_name || 'Brand'}">
                                 </a>
                             </li>`;
 					});
@@ -281,7 +255,7 @@
 						gallery.innerHTML += `
                             <div class="galleri__block">
                                 <div class="galleri__image-ibg">
-                                    <img src="${basePath}${item.gallery_image}" alt="foto">
+                                    <img src="${item.gallery_image}" alt="foto">
                                 </div>
                                 <a href="#" class="galleri__linck _icon-arrow-right">
                                     <div class="galleri__wrap">

@@ -3,16 +3,123 @@ backend:
   repo: OlehKotynskyi/test-cms
   branch: main
 
-media_folder: "img"
-public_folder: "/img"
+media_folder: "img" # Папка для завантаження медіафайлів
+public_folder: "/img" # Шлях для доступу до медіафайлів на сайті
 
 collections:
   - name: "pages"
     label: "Сторінки"
     files:
-      - file: "home.md" # Змінили з index.md на home.md
+      - file: "home.md"
         label: "Головна сторінка"
         name: "home"
         fields:
-          - { label: "Заголовок", name: "title", widget: "string" }
-          - { label: "Текст", name: "body", widget: "markdown" }
+          # Секція Creative
+          - {
+              label: "Підзаголовок (Jessica Strosin)",
+              name: "creative_subtitle",
+              widget: "string",
+            }
+          - {
+              label: "Заголовок секції Creative",
+              name: "creative_title",
+              widget: "string",
+            }
+          - {
+              label: "Текст секції Creative",
+              name: "creative_body",
+              widget: "markdown",
+            }
+          - {
+              label: "Опис (під текстом)",
+              name: "creative_description",
+              widget: "string",
+            }
+          - {
+              label: "Картинка секції Creative",
+              name: "creative_image",
+              widget: "image",
+            }
+
+          # Секція Industrial
+          - {
+              label: "Заголовок секції Industrial",
+              name: "industrial_title",
+              widget: "string",
+            }
+          - {
+              label: "Текст Web Design",
+              name: "industrial_web_design",
+              widget: "markdown",
+            }
+          - {
+              label: "Текст Branding",
+              name: "industrial_branding",
+              widget: "markdown",
+            }
+          - {
+              label: "Текст Photography",
+              name: "industrial_photography",
+              widget: "markdown",
+            }
+          - {
+              label: "Текст Mobile Design",
+              name: "industrial_mobile_design",
+              widget: "markdown",
+            }
+          - {
+              label: "Текст 3D Modeling",
+              name: "industrial_3d_modeling",
+              widget: "markdown",
+            }
+          - {
+              label: "Текст Video Creating",
+              name: "industrial_video_creating",
+              widget: "markdown",
+            }
+          - {
+              label: "Картинка секції Industrial",
+              name: "industrial_image",
+              widget: "image",
+            }
+
+          # Секція Brands (список логотипів)
+          - label: "Логотипи брендів"
+            name: "brands_logos"
+            widget: "list"
+            fields:
+              - {
+                  label: "Картинка логотипу",
+                  name: "logo_image",
+                  widget: "image",
+                }
+              - { label: "Назва бренду", name: "logo_name", widget: "string" }
+
+          # Секція The Best (галерея)
+          - label: "Галерея The Best"
+            name: "the_best_gallery"
+            widget: "list"
+            fields:
+              - { label: "Картинка", name: "gallery_image", widget: "image" }
+              - { label: "Заголовок", name: "gallery_title", widget: "string" }
+              - { label: "Опис", name: "gallery_text", widget: "string" }
+
+          # Секція Analytics
+          - {
+              label: "Текст Business Planning",
+              name: "analytics_business",
+              widget: "markdown",
+            }
+          - {
+              label: "Текст Financial Planning",
+              name: "analytics_financial",
+              widget: "markdown",
+            }
+          - {
+              label: "Текст Market Analytics",
+              name: "analytics_market",
+              widget: "markdown",
+            }
+
+          # Секція Footer
+          - { label: "Текст футера", name: "footer_text", widget: "markdown" }

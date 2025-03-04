@@ -1,18 +1,18 @@
 backend:
-  name: github
-  repo: твій-username/твій-репозиторій # Заміни на свій GitHub репозиторій
-  branch: main # Гілка, з якою працюватиме CMS
+  name: git-gateway
+  repo: OlehKotynskyi/test-cms
+  branch: main
 
-media_folder: "img" # Папка для завантаження медіафайлів
-public_folder: "/img" # Шлях для доступу до медіафайлів на сайті
+media_folder: "img"
+public_folder: "/img"
 
 collections:
   - name: "pages"
     label: "Сторінки"
     files:
-      - file: "index.md"
+      - file: "home.md" # Змінили з index.md на home.md
         label: "Головна сторінка"
-        name: "index"
+        name: "home"
         fields:
           - { label: "Заголовок", name: "title", widget: "string" }
           - { label: "Текст", name: "body", widget: "markdown" }

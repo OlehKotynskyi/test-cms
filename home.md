@@ -1,7 +1,8 @@
 ---
 creative_subtitle: Jessica Strosin
-creative_title: Привіт світ
-creative_body: На гід хабі жива сторінка не працює але на нетліфай все робить і редагується
+creative_title: Привіт Даніл Як справи?
+creative_body: "***На гід хабі жива сторінка не працює але на нетліфай все
+  робить і редагується***"
 creative_description: I am currently open for part-time work.
 creative_image: /img/main/girl-main.jpg
 industrial_title: From beginning ideas to individual integrity, rich identity
